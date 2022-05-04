@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Sheets.v4;
+using Newtonsoft.Json;
 
 namespace Food_Place_App
 {
@@ -64,6 +65,11 @@ namespace Food_Place_App
             var request = foodPlaceSheetValues.Get(spreadSheetId, range);
             var response = request.Execute();
             var values = response.Values;
+
+            string foodValues = JsonConvert.SerializeObject(values);
+            FoodPlace foodPlaceResult = JsonConvert.DeserializeObject<FoodPlace>(foodValues);
+            
+
             if (response.Values != null && response.Values.Count > 0)
             {
               return Ok(FoodPlacesMapper.MapFromRangeData(values));
