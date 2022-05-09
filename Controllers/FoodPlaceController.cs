@@ -15,19 +15,28 @@ namespace Food_Place_App
 
     public static class FoodPlacesMapper
     {
-        public static List<FoodPlace> MapFromRangeData(IList<IList<object>> values)
+        public static List<FoodPlace> MapFromRangeData(IList<IList<Object>> values)
         {
             var foodPlaces = new List<FoodPlace>();
 
             foreach (var value in values)
             {
+                int distInt = Convert.ToInt32(value[1].ToString());
+
+                int priceInt = Convert.ToInt32(value[2].ToString());
+
+                int healthInt = Convert.ToInt32(value[3].ToString());
+
+                double avgDouble = Convert.ToDouble(value[4].ToString());
+                
                 FoodPlace foodPlace = new()
                 {
+                  
                     Name = value[0].ToString(),
-                    DistanceRating = value[1].ToString(),
-                    PriceRating = value[2].ToString(),
-                    HealthRating = value[3].ToString(),
-                    AvgRating = value[4].ToString()
+                    DistanceRating = distInt,
+                    PriceRating = priceInt,
+                    HealthRating = healthInt,
+                    AvgRating = avgDouble
                 };
 
                 foodPlaces.Add(foodPlace);
@@ -59,20 +68,23 @@ namespace Food_Place_App
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(int distanceRating, int priceRating, int healthRating, int avgRating)
         {
             var range = $"{sheet}!A4:E997";
             var request = foodPlaceSheetValues.Get(spreadSheetId, range);
             var response = request.Execute();
             var values = response.Values;
 
-            string foodValues = JsonConvert.SerializeObject(values);
-            FoodPlace foodPlaceResult = JsonConvert.DeserializeObject<FoodPlace>(foodValues);
+            List<FoodPlace> foodPlaceResult = FoodPlacesMapper.MapFromRangeData(values);
+            foodPlaceResult.RemoveAll(r=> r.DistanceRating < distanceRating);
+            foodPlaceResult.RemoveAll(r=> r.PriceRating < priceRating);
+            foodPlaceResult.RemoveAll(r=> r.HealthRating < healthRating);
+            foodPlaceResult.RemoveAll(r=> r.AvgRating < avgRating);
             
 
             if (response.Values != null && response.Values.Count > 0)
             {
-              return Ok(FoodPlacesMapper.MapFromRangeData(values));
+              return Ok(foodPlaceResult);
             }
             else
             {
