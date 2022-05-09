@@ -5,6 +5,7 @@ using System.IO;
 
 public class GoogleSheetsHelper
 {
+    //Class for handling accessing GoogleSheets api
     public SheetsService service { get; set; }
     const string applicationName = "Food_Place_App";
     static readonly string[] scopes = { SheetsService.Scope.Spreadsheets };

@@ -19,6 +19,8 @@ namespace Food_Place_App
         {
             var foodPlaces = new List<FoodPlace>();
 
+            //Maps data passed from google api to their correct values and value types
+
             foreach (var value in values)
             {
                 int distInt = Convert.ToInt32(value[1].ToString());
@@ -43,13 +45,6 @@ namespace Food_Place_App
             }
 
             return foodPlaces;
-        }
-
-        public static IList<IList<object>> MapToRangeData(FoodPlace foodPlace)
-        {
-            var objectList = new List<object>() { foodPlace.Name, foodPlace.DistanceRating, foodPlace.PriceRating, foodPlace.HealthRating, foodPlace.AvgRating};
-            var rangeData = new List<IList<object>> { objectList };
-            return rangeData;
         }
     }
     [Route("[controller]")]
@@ -76,10 +71,23 @@ namespace Food_Place_App
             var values = response.Values;
 
             List<FoodPlace> foodPlaceResult = FoodPlacesMapper.MapFromRangeData(values);
-            foodPlaceResult.RemoveAll(r=> r.DistanceRating < distanceRating);
+            //Removes records with values lower than the parameters, the parameters are defaulted to 0 by the mapper if they're left null
+            foodPlaceResult.RemoveAll(r=> r.DistanceRating < distanceRating); 
             foodPlaceResult.RemoveAll(r=> r.PriceRating < priceRating);
             foodPlaceResult.RemoveAll(r=> r.HealthRating < healthRating);
             foodPlaceResult.RemoveAll(r=> r.AvgRating < avgRating);
+
+            //Initializes int with a random number
+            Random random = new Random();            
+            int randomNumber;
+
+            while(foodPlaceResult.Count > 1)
+            {
+              //Picks a random number and removes that record until there is only one left
+              randomNumber = random.Next(0, foodPlaceResult.Count);
+
+              foodPlaceResult.RemoveAt(randomNumber);
+            }
             
 
             if (response.Values != null && response.Values.Count > 0)
