@@ -67,7 +67,7 @@ namespace Food_Place_App
             List<FoodPlace> foodPlaceResult = FoodPlacesMapper.MapFromRangeData(values);
             //Removes records with values lower than the parameters, the parameters are defaulted to 0 by the mapper if they're left null
             foodPlaceResult.RemoveAll(r=> r.DistanceRating < distanceRating); 
-            foodPlaceResult.RemoveAll(r=> r.PriceRating < priceRating);
+            foodPlaceResult.RemoveAll(r=> r.PriceRating > priceRating);
             foodPlaceResult.RemoveAll(r=> r.HealthRating < healthRating);
             foodPlaceResult.RemoveAll(r=> r.AvgRating < avgRating);
 
