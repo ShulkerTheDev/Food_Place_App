@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Food Place</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<script src="js/site.js" asp-append-version="true"></script>
+<body>
+    <h1>Food Place</h1>
+    <form>
+      <label for="DisRate">Distance Rating</label>
+      <input type="number" id="DisRate" name="DisRate"><br><br>
+      <label for="PriceRate">Price Rating</label>
+      <input type="number" id="PriceRate" name="PriceRate"><br><br>
+      <label for="HealthRate">Health Rating</label>
+      <input type="number" id="HealthRate" name="HealthRate"><br><br>
+      <label for="AvgRate">Average Rating</label>
+      <input type="number" id="AvgRate" name="AvgRate"><br><br>
+      <input type="button" id="submitButton" onclick="callFoodPlaceFunction()" value="Submit">
+    </form>
+    </table>
+
+    <script type="text/javascript">
+      async function callFoodPlaceFunction(){
+
+        var DisRate = document.getElementById('DisRate').value;
+        var PriceRate = document.getElementById('PriceRate').value;
+        var HealthRate = document.getElementById('HealthRate').value;
+        var AvgRate = document.getElementById('AvgRate').value;
+
+        var result = await getFoodPlace(DisRate, PriceRate, HealthRate, AvgRate);
+        
+        alert(result);
+      }  
+    </script>
+</body>
+</html>
